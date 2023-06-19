@@ -9,7 +9,7 @@ type Node interface {
 
 type Declaration interface {
 	Node
-	statementNode()
+	declarationNode()
 }
 
 type Program struct {
@@ -39,13 +39,31 @@ type TypeDeclaration struct {
 	Name  string
 }
 
-func (td *TypeDeclaration) statementNode()       {}
+func (td *TypeDeclaration) declarationNode()     {}
 func (td *TypeDeclaration) TokenLiteral() string { return td.Token.Literal }
 func (td *TypeDeclaration) String() string {
 	var out bytes.Buffer
 
 	out.WriteString(td.TokenLiteral() + " ")
 	out.WriteString(td.Name)
+
+	return out.String()
+}
+
+type VarDeclaration struct {
+	Token Token
+	Name  string
+	Type  string
+}
+
+func (vd *VarDeclaration) declarationNode()     {}
+func (vd *VarDeclaration) TokenLiteral() string { return vd.Token.Literal }
+func (vd *VarDeclaration) String() string {
+	var out bytes.Buffer
+
+	out.WriteString(vd.TokenLiteral() + " ")
+	out.WriteString(vd.Name + " ")
+	out.WriteString(vd.Type)
 
 	return out.String()
 }

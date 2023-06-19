@@ -11,16 +11,20 @@ var tokens = struct {
 	ILLEGAL TokenType
 	EOF     TokenType
 	IDENT   TokenType
-	TYPE    TokenType
+	// Keywords.
+	TYPE TokenType
+	VAR  TokenType
 }{
 	"ILLEGAL",
 	"EOF",
 	"IDENT",
 	"TYPE",
+	"VAR",
 }
 
 var TokenKeywords = map[string]TokenType{
 	"type": tokens.TYPE,
+	"var":  tokens.VAR,
 }
 
 func LookupKeyword(ident string) TokenType {

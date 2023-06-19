@@ -5,8 +5,12 @@ import (
 )
 
 func TestLexer(t *testing.T) {
-	input := `type int
-type string`
+	input := `
+type int
+type string
+
+var num int
+var str string`
 
 	tests := []struct {
 		expectedType    TokenType
@@ -15,6 +19,12 @@ type string`
 		{tokens.TYPE, "type"},
 		{tokens.IDENT, "int"},
 		{tokens.TYPE, "type"},
+		{tokens.IDENT, "string"},
+		{tokens.VAR, "var"},
+		{tokens.IDENT, "num"},
+		{tokens.IDENT, "int"},
+		{tokens.VAR, "var"},
+		{tokens.IDENT, "str"},
 		{tokens.IDENT, "string"},
 		{tokens.EOF, ""},
 	}

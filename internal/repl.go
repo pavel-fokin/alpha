@@ -35,5 +35,4 @@ func (r REPL) Start(in io.Reader, out io.Writer) {
 		io.WriteString(out, program.String())
 		io.WriteString(out, "\n")
 	}
-
 }
