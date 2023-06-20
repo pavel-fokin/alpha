@@ -14,7 +14,7 @@ func (r REPL) Start(in io.Reader, out io.Writer) {
 	scanner := bufio.NewScanner(in)
 
 	for {
-		fmt.Printf(PROMT)
+		fmt.Print(PROMT)
 		scanned := scanner.Scan()
 		if !scanned {
 			return

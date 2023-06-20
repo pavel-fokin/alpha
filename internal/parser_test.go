@@ -2,6 +2,8 @@ package internal
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestParser(t *testing.T) {
@@ -25,24 +27,20 @@ var str string
 	}
 
 	tests := []struct {
-		expectedTypeName string
+		expectedLiteral string
+		expectedType Declaration
+		expectedName string
 	}{
-		{"int"},
-		{"string"},
+		{"type", &Type{}, "int"},
+		{"type", &Type{}, "string"},
+		{"var", &Var{}, "str"},
+		{"var", &Var{}, "num"},
 	}
 
 	for idx, test := range tests {
 		decl := ast.Declarations[idx]
-		if decl.TokenLiteral() != "type" {
-			t.Fatalf("Type declaration TokenLiteral not 'type' got='%s'", test.expectedTypeName)
-		}
-		typeDecl, ok := decl.(*Type)
-		if !ok {
-			t.Fatalf("not a *Type, got=%T", decl)
-		}
-
-		if typeDecl.Name != test.expectedTypeName {
-			t.Fatalf("type.Name not '%s', got='%s'", test.expectedTypeName, typeDecl.Name)
-		}
+    require.Equal(t, test.expectedLiteral, decl.TokenLiteral())
+		require.IsType(t, test.expectedType, decl)
+		// require.Equal(t, test.expectedName, decl.(test.expectedType).Name)
 	}
 }

@@ -2,6 +2,8 @@ package internal
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestLexer(t *testing.T) {
@@ -31,16 +33,9 @@ var str string`
 
 	lexer := NewLexer(input)
 
-	for idx, test := range tests {
+	for _, test := range tests {
 		token := lexer.NextToken()
-
-		if token.Type != test.expectedType {
-			t.Fatalf("tests[%d] - tokentype wrong. expected=%q, got=%q",
-				idx, test.expectedType, token.Type)
-		}
-		if token.Literal != test.expectedLiteral {
-			t.Fatalf("tests[%d] - literal wrong. expected=%q, got=%q",
-				idx, test.expectedLiteral, token.Literal)
-		}
+		require.Equal(t, test.expectedType, token.Type)
+		require.Equal(t, test.expectedLiteral, token.Literal)
 	}
 }
