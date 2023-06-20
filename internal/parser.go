@@ -39,9 +39,28 @@ func (p *Parser) parseDeclaration() Declaration {
 	switch p.curToken.Type {
 	case tokens.TYPE:
 		return p.parseTypeDeclaration()
+	case tokens.VAR:
+		return p.parseVarDeclaration()
 	default:
 		return nil
 	}
+}
+
+func (p *Parser) parseVarDeclaration() *VarDeclaration {
+	declaration := &VarDeclaration{Token: p.curToken}
+
+	if !p.expectPeek(tokens.IDENT) {
+		return nil
+	}
+
+	declaration.Name = p.curToken.Literal
+
+	if !p.expectPeek(tokens.IDENT) {
+		return nil
+	}
+
+	declaration.Type = string(p.curToken.Literal)
+	return declaration
 }
 
 func (p *Parser) parseTypeDeclaration() *TypeDeclaration {

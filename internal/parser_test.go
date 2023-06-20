@@ -7,7 +7,11 @@ import (
 func TestParser(t *testing.T) {
 	input := `
 type int
-type string`
+type string
+
+var num int
+var str string
+`
 
 	lexer := NewLexer(input)
 	parser := NewParser(lexer)
@@ -16,7 +20,7 @@ type string`
 	if program == nil {
 		t.Fatal("ParserProgram() returned 'nil'.")
 	}
-	if len(program.Declarations) != 2 {
+	if len(program.Declarations) != 4 {
 		t.Fatal("program.Declarations doesn't have 2 declarations.")
 	}
 
