@@ -10,7 +10,14 @@ type Token struct {
 var tokens = struct {
 	ILLEGAL TokenType
 	EOF     TokenType
-	IDENT   TokenType
+
+	IDENT TokenType
+
+	// Brackets.
+	COMMA  TokenType
+	LPAREN TokenType
+	RPAREN TokenType
+
 	// Keywords.
 	TYPE TokenType
 	VAR  TokenType
@@ -19,6 +26,9 @@ var tokens = struct {
 	"ILLEGAL",
 	"EOF",
 	"IDENT",
+	",",
+	"(",
+	")",
 	"TYPE",
 	"VAR",
 	"FUNC",

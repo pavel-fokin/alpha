@@ -8,4 +8,6 @@ type string
 
 var num int
 var str string
+
+func add(int a, int b) int
 ```

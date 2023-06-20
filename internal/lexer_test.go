@@ -9,10 +9,10 @@ import (
 func TestLexer(t *testing.T) {
 	input := `
 type int
-type string
 
 var num int
-var str string`
+
+func add(int a, int b) int`
 
 	tests := []struct {
 		expectedType    TokenType
@@ -20,14 +20,19 @@ var str string`
 	}{
 		{tokens.TYPE, "type"},
 		{tokens.IDENT, "int"},
-		{tokens.TYPE, "type"},
-		{tokens.IDENT, "string"},
 		{tokens.VAR, "var"},
 		{tokens.IDENT, "num"},
 		{tokens.IDENT, "int"},
-		{tokens.VAR, "var"},
-		{tokens.IDENT, "str"},
-		{tokens.IDENT, "string"},
+		{tokens.FUNC, "func"},
+		{tokens.IDENT, "add"},
+		{tokens.LPAREN, "("},
+		{tokens.IDENT, "int"},
+		{tokens.IDENT, "a"},
+		{tokens.COMMA, ","},
+		{tokens.IDENT, "int"},
+		{tokens.IDENT, "b"},
+		{tokens.RPAREN, ")"},
+		{tokens.IDENT, "int"},
 		{tokens.EOF, ""},
 	}
 
