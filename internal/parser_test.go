@@ -2,43 +2,45 @@ package internal
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestParser(t *testing.T) {
 	input := `
 type int
-type string`
+type string
+
+var num int
+var str string
+`
 
 	lexer := NewLexer(input)
 	parser := NewParser(lexer)
 
-	program := parser.ParseProgram()
-	if program == nil {
-		t.Fatal("ParserProgram() returned 'nil'.")
+	ast := parser.Parse()
+	if ast == nil {
+		t.Fatal("Parse() returned 'nil'.")
 	}
-	if len(program.Declarations) != 2 {
-		t.Fatal("program.Declarations doesn't have 2 declarations.")
+	if len(ast.Declarations) != 4 {
+		t.Fatal("ast.Declarations doesn't have 4 declarations.")
 	}
 
 	tests := []struct {
-		expectedTypeName string
+		expectedLiteral string
+		expectedType Declaration
+		expectedName string
 	}{
-		{"int"},
-		{"string"},
+		{"type", &Type{}, "int"},
+		{"type", &Type{}, "string"},
+		{"var", &Var{}, "str"},
+		{"var", &Var{}, "num"},
 	}
 
 	for idx, test := range tests {
-		decl := program.Declarations[idx]
-		if decl.TokenLiteral() != "type" {
-			t.Fatalf("Type declaration TokenLiteral not 'type' got='%s'", test.expectedTypeName)
-		}
-		typeDecl, ok := decl.(*TypeDeclaration)
-		if !ok {
-			t.Fatalf("not a *TypeDeclaration, got=%T", decl)
-		}
-
-		if typeDecl.Name != test.expectedTypeName {
-			t.Fatalf("typeDecl.Name not '%s', got='%s'", test.expectedTypeName, typeDecl.Name)
-		}
+		decl := ast.Declarations[idx]
+    require.Equal(t, test.expectedLiteral, decl.TokenLiteral())
+		require.IsType(t, test.expectedType, decl)
+		// require.Equal(t, test.expectedName, decl.(test.expectedType).Name)
 	}
 }

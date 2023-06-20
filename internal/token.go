@@ -10,17 +10,34 @@ type Token struct {
 var tokens = struct {
 	ILLEGAL TokenType
 	EOF     TokenType
-	IDENT   TokenType
-	TYPE    TokenType
+
+	IDENT TokenType
+
+	// Brackets.
+	COMMA  TokenType
+	LPAREN TokenType
+	RPAREN TokenType
+
+	// Keywords.
+	TYPE TokenType
+	VAR  TokenType
+	FUNC TokenType
 }{
 	"ILLEGAL",
 	"EOF",
 	"IDENT",
+	",",
+	"(",
+	")",
 	"TYPE",
+	"VAR",
+	"FUNC",
 }
 
 var TokenKeywords = map[string]TokenType{
 	"type": tokens.TYPE,
+	"var":  tokens.VAR,
+	"func": tokens.FUNC,
 }
 
 func LookupKeyword(ident string) TokenType {

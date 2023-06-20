@@ -8,16 +8,26 @@ type Lexer struct {
 }
 
 func NewLexer(input string) *Lexer {
-	return &Lexer{input: input}
+	l := &Lexer{input: input}
+	l.readChar()
+	return l
 }
 
 func (l *Lexer) NextToken() Token {
 	var token Token
 
-	l.readChar()
 	l.skipWhitespace()
 
 	switch l.ch {
+	case ',':
+		token.Literal = ","
+		token.Type = tokens.COMMA
+	case '(':
+		token.Literal = "("
+		token.Type = tokens.LPAREN
+	case ')':
+		token.Literal = ")"
+		token.Type = tokens.RPAREN
 	case 0:
 		token.Literal = ""
 		token.Type = tokens.EOF
@@ -25,11 +35,14 @@ func (l *Lexer) NextToken() Token {
 		if isLetter(l.ch) {
 			token.Literal = l.readIdentifier()
 			token.Type = LookupKeyword(token.Literal)
+			return token
 		} else {
 			token.Literal = string(l.ch)
 			token.Type = tokens.ILLEGAL
 		}
 	}
+
+	l.readChar()
 	return token
 }
 
@@ -51,12 +64,12 @@ func (l *Lexer) readIdentifier() string {
 	return l.input[position:l.position]
 }
 
-func isLetter(ch byte) bool {
-	return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_'
-}
-
 func (l *Lexer) skipWhitespace() {
 	for l.ch == ' ' || l.ch == '\t' || l.ch == '\n' || l.ch == '\r' {
 		l.readChar()
 	}
+}
+
+func isLetter(ch byte) bool {
+	return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_'
 }
