@@ -16,12 +16,12 @@ var str string
 	lexer := NewLexer(input)
 	parser := NewParser(lexer)
 
-	program := parser.ParseProgram()
-	if program == nil {
-		t.Fatal("ParserProgram() returned 'nil'.")
+	ast := parser.Parse()
+	if ast == nil {
+		t.Fatal("Parse() returned 'nil'.")
 	}
-	if len(program.Declarations) != 4 {
-		t.Fatal("program.Declarations doesn't have 2 declarations.")
+	if len(ast.Declarations) != 4 {
+		t.Fatal("ast.Declarations doesn't have 4 declarations.")
 	}
 
 	tests := []struct {
@@ -32,17 +32,17 @@ var str string
 	}
 
 	for idx, test := range tests {
-		decl := program.Declarations[idx]
+		decl := ast.Declarations[idx]
 		if decl.TokenLiteral() != "type" {
 			t.Fatalf("Type declaration TokenLiteral not 'type' got='%s'", test.expectedTypeName)
 		}
-		typeDecl, ok := decl.(*TypeDeclaration)
+		typeDecl, ok := decl.(*Type)
 		if !ok {
-			t.Fatalf("not a *TypeDeclaration, got=%T", decl)
+			t.Fatalf("not a *Type, got=%T", decl)
 		}
 
 		if typeDecl.Name != test.expectedTypeName {
-			t.Fatalf("typeDecl.Name not '%s', got='%s'", test.expectedTypeName, typeDecl.Name)
+			t.Fatalf("type.Name not '%s', got='%s'", test.expectedTypeName, typeDecl.Name)
 		}
 	}
 }

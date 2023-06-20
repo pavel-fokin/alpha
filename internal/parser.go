@@ -16,8 +16,8 @@ func (p *Parser) nextToken() {
 	p.peekToken = p.lexer.NextToken()
 }
 
-func (p *Parser) ParseProgram() *Program {
-	program := &Program{}
+func (p *Parser) Parse() *AST {
+	program := &AST{}
 	program.Declarations = []Declaration{}
 
 	// We need to fill in curToken and peekToken.
@@ -38,16 +38,16 @@ func (p *Parser) ParseProgram() *Program {
 func (p *Parser) parseDeclaration() Declaration {
 	switch p.curToken.Type {
 	case tokens.TYPE:
-		return p.parseTypeDeclaration()
+		return p.parseType()
 	case tokens.VAR:
-		return p.parseVarDeclaration()
+		return p.parseVar()
 	default:
 		return nil
 	}
 }
 
-func (p *Parser) parseVarDeclaration() *VarDeclaration {
-	declaration := &VarDeclaration{Token: p.curToken}
+func (p *Parser) parseVar() *Var {
+	declaration := &Var{Token: p.curToken}
 
 	if !p.expectPeek(tokens.IDENT) {
 		return nil
@@ -63,8 +63,8 @@ func (p *Parser) parseVarDeclaration() *VarDeclaration {
 	return declaration
 }
 
-func (p *Parser) parseTypeDeclaration() *TypeDeclaration {
-	declaration := &TypeDeclaration{Token: p.curToken}
+func (p *Parser) parseType() *Type {
+	declaration := &Type{Token: p.curToken}
 
 	if !p.expectPeek(tokens.IDENT) {
 		return nil
