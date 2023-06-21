@@ -28,8 +28,8 @@ var str string
 
 	tests := []struct {
 		expectedLiteral string
-		expectedType Declaration
-		expectedName string
+		expectedType    Declaration
+		expectedName    string
 	}{
 		{"type", &Type{}, "int"},
 		{"type", &Type{}, "string"},
@@ -39,8 +39,45 @@ var str string
 
 	for idx, test := range tests {
 		decl := ast.Declarations[idx]
-    require.Equal(t, test.expectedLiteral, decl.TokenLiteral())
+		require.Equal(t, test.expectedLiteral, decl.TokenLiteral())
 		require.IsType(t, test.expectedType, decl)
 		// require.Equal(t, test.expectedName, decl.(test.expectedType).Name)
+	}
+}
+
+func TestParseFunc(t *testing.T) {
+
+	input := `
+func foo() int
+func foo(a) int
+func foo(a, b) int
+`
+
+	lexer := NewLexer(input)
+	parser := NewParser(lexer)
+
+	ast := parser.Parse()
+
+	require := require.New(t)
+	require.NotNil(ast)
+	require.Len(ast.Declarations, 3)
+
+	tests := []struct {
+		expectedLiteral string
+		expectedName    string
+		expectedParams  []string
+		expectedReturns []string
+	}{
+		{"func", "foo", []string{}, []string{"int"}},
+		{"func", "foo", []string{"a"}, []string{"int"}},
+		{"func", "foo", []string{"a", "b"}, []string{"int"}},
+	}
+
+	for idx, test := range tests {
+		decl := ast.Declarations[idx]
+		require.Equal(test.expectedLiteral, decl.TokenLiteral(), idx)
+		require.Equal(test.expectedName, decl.(*Func).Name, idx)
+		require.Equal(test.expectedParams, decl.(*Func).Params, idx)
+		require.Equal(test.expectedReturns, decl.(*Func).Returns, idx)
 	}
 }

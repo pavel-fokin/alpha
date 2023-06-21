@@ -1,6 +1,9 @@
 package internal
 
-import "bytes"
+import (
+	"bytes"
+	"strings"
+)
 
 type Node interface {
 	TokenLiteral() string
@@ -64,6 +67,36 @@ func (vd *Var) String() string {
 	out.WriteString(vd.TokenLiteral() + " ")
 	out.WriteString(vd.Name + " ")
 	out.WriteString(vd.Type)
+
+	return out.String()
+}
+
+type Func struct {
+	Token   Token
+	Name    string
+	Params  []string
+	Returns []string // List of returned types.
+}
+
+func (f *Func) declarationNode()     {}
+func (f *Func) TokenLiteral() string { return f.Token.Literal }
+func (f *Func) String() string {
+	var out bytes.Buffer
+
+	out.WriteString(f.TokenLiteral() + " ")
+	out.WriteString(f.Name + "(")
+	out.WriteString(strings.Join(f.Params, ", "))
+	out.WriteString(") ")
+
+	if len(f.Returns) == 0 {
+		// Empty returns.
+	} else if len(f.Returns) == 1 {
+		out.WriteString(f.Returns[0])
+	} else {
+		out.WriteString(f.Name + "(")
+		out.WriteString(strings.Join(f.Returns, ", "))
+		out.WriteString(")")
+	}
 
 	return out.String()
 }

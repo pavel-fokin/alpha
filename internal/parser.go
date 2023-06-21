@@ -1,5 +1,7 @@
 package internal
 
+import "fmt"
+
 type Parser struct {
 	lexer *Lexer
 
@@ -41,9 +43,22 @@ func (p *Parser) parseDeclaration() Declaration {
 		return p.parseType()
 	case tokens.VAR:
 		return p.parseVar()
+	case tokens.FUNC:
+		return p.parseFunc()
 	default:
 		return nil
 	}
+}
+
+func (p *Parser) parseType() *Type {
+	declaration := &Type{Token: p.curToken}
+
+	if !p.expectPeek(tokens.IDENT) {
+		return nil
+	}
+
+	declaration.Name = p.curToken.Literal
+	return declaration
 }
 
 func (p *Parser) parseVar() *Var {
@@ -63,15 +78,93 @@ func (p *Parser) parseVar() *Var {
 	return declaration
 }
 
-func (p *Parser) parseType() *Type {
-	declaration := &Type{Token: p.curToken}
+func (p *Parser) parseFunc() *Func {
+	f := &Func{Token: p.curToken}
 
 	if !p.expectPeek(tokens.IDENT) {
 		return nil
 	}
 
-	declaration.Name = p.curToken.Literal
-	return declaration
+	f.Name = p.curToken.Literal
+
+	if !p.expectPeek(tokens.LPAREN) {
+		return nil
+	}
+
+	f.Params = p.parseFuncParams()
+	p.nextToken()
+	f.Returns = p.parseFuncReturns()
+
+	return f
+}
+
+func (p *Parser) parseFuncParams() []string {
+	params := []string{}
+
+	if p.peekTokenIs(tokens.RPAREN) {
+		p.nextToken()
+		return params
+	}
+
+	p.nextToken()
+
+	params = append(params, p.curToken.Literal)
+
+	for p.peekTokenIs(tokens.COMMA) {
+		p.nextToken()
+		p.nextToken()
+		params = append(params, p.curToken.Literal)
+	}
+
+	if !p.expectPeek(tokens.RPAREN) {
+		return nil
+	}
+
+	return params
+}
+
+func (p *Parser) parseFuncReturns() []string {
+	returns := []string{}
+
+	fmt.Println("p.curToken.Literal", p.curToken.Literal)
+	fmt.Println("p.peekToken.Literal", p.peekToken.Literal)
+
+	if !(p.peekTokenIs(tokens.IDENT) || p.peekTokenIs(tokens.LPAREN)) {
+		fmt.Println("### 0", !(p.peekTokenIs(tokens.IDENT) || p.peekTokenIs(tokens.LPAREN)))
+		return returns
+	}
+
+	fmt.Println("### 1")
+
+	if p.peekTokenIs(tokens.IDENT) {
+		fmt.Println("#", p.curToken.Literal)
+		returns = append(returns, p.curToken.Literal)
+		p.nextToken()
+		return returns
+	}
+
+	fmt.Println("### 2")
+
+	if p.peekTokenIs(tokens.RPAREN) {
+		p.nextToken()
+		return returns
+	}
+
+	p.nextToken()
+
+	returns = append(returns, p.curToken.Literal)
+
+	for p.peekTokenIs(tokens.COMMA) {
+		p.nextToken()
+		p.nextToken()
+		returns = append(returns, p.curToken.Literal)
+	}
+
+	if !p.expectPeek(tokens.RPAREN) {
+		return nil
+	}
+
+	return returns
 }
 
 func (p *Parser) peekTokenIs(tokenType TokenType) bool {
