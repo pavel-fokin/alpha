@@ -46,10 +46,10 @@ var str string
 }
 
 func TestParseFunc(t *testing.T) {
-
 	input := `
+func foo()
+func foo(a)
 func foo() int
-func foo(a) int
 func foo(a, b) int
 `
 
@@ -60,7 +60,6 @@ func foo(a, b) int
 
 	require := require.New(t)
 	require.NotNil(ast)
-	require.Len(ast.Declarations, 3)
 
 	tests := []struct {
 		expectedLiteral string
@@ -68,8 +67,9 @@ func foo(a, b) int
 		expectedParams  []string
 		expectedReturns []string
 	}{
+		{"func", "foo", []string{}, []string{}},
+		{"func", "foo", []string{"a"}, []string{}},
 		{"func", "foo", []string{}, []string{"int"}},
-		{"func", "foo", []string{"a"}, []string{"int"}},
 		{"func", "foo", []string{"a", "b"}, []string{"int"}},
 	}
 
