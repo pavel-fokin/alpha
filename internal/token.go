@@ -7,6 +7,10 @@ type Token struct {
 	Literal string
 }
 
+func NewToken(tt TokenType, l string) Token {
+	return Token{tt, l}
+}
+
 var tokens = struct {
 	ILLEGAL TokenType
 	EOF     TokenType
