@@ -6,25 +6,18 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestParser(t *testing.T) {
+func TestParseType(t *testing.T) {
 	input := `
 type int
-type string
-
-var num int
-var str string
-`
+type string`
 
 	lexer := NewLexer(input)
 	parser := NewParser(lexer)
 
 	ast := parser.Parse()
-	if ast == nil {
-		t.Fatal("Parse() returned 'nil'.")
-	}
-	if len(ast.Declarations) != 4 {
-		t.Fatal("ast.Declarations doesn't have 4 declarations.")
-	}
+
+	require := require.New(t)
+	require.NotNil(ast)
 
 	tests := []struct {
 		expectedLiteral string
@@ -33,15 +26,44 @@ var str string
 	}{
 		{"type", &Type{}, "int"},
 		{"type", &Type{}, "string"},
-		{"var", &Var{}, "str"},
-		{"var", &Var{}, "num"},
 	}
 
 	for idx, test := range tests {
 		decl := ast.Declarations[idx]
-		require.Equal(t, test.expectedLiteral, decl.TokenLiteral())
-		require.IsType(t, test.expectedType, decl)
-		// require.Equal(t, test.expectedName, decl.(test.expectedType).Name)
+		require.Equal(test.expectedLiteral, decl.TokenLiteral())
+		require.IsType(test.expectedType, decl)
+		require.Equal(test.expectedName, decl.(*Type).Name)
+	}
+}
+
+func TestParseVar(t *testing.T) {
+	input := `
+int num
+string str`
+
+	// Setup.
+	lexer := NewLexer(input)
+	parser := NewParser(lexer)
+
+	// Test.
+	ast := parser.Parse()
+
+	// Assert.
+	require := require.New(t)
+	require.NotNil(ast)
+
+	tests := []struct {
+		expectedType string
+		expectedName string
+	}{
+		{"int", "num"},
+		{"string", "str"},
+	}
+
+	for idx, test := range tests {
+		decl := ast.Declarations[idx]
+		require.Equal(test.expectedType, decl.(*Var).Type, idx)
+		require.Equal(test.expectedName, decl.(*Var).Name, idx)
 	}
 }
 

@@ -24,7 +24,6 @@ var tokens = struct {
 
 	// Keywords.
 	TYPE TokenType
-	VAR  TokenType
 	FUNC TokenType
 }{
 	"ILLEGAL",
@@ -34,13 +33,11 @@ var tokens = struct {
 	"(",
 	")",
 	"TYPE",
-	"VAR",
 	"FUNC",
 }
 
 var TokenKeywords = map[string]TokenType{
 	"type": tokens.TYPE,
-	"var":  tokens.VAR,
 	"func": tokens.FUNC,
 }
 

@@ -6,8 +6,8 @@ This is walkthrough "Writing Interpreter in Go".
 type int
 type string
 
-var num int
-var str string
+int num
+string str
 
-func add(a int, b int) int
+func foo(a, b) int
 ```

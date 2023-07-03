@@ -28,15 +28,14 @@ func TestLexer_Type(t *testing.T) {
 }
 
 func TestLexer_Var(t *testing.T) {
-	input := `var num int`
+	input := `int num`
 
 	tests := []struct {
 		expectedType    TokenType
 		expectedLiteral string
 	}{
-		{tokens.VAR, "var"},
-		{tokens.IDENT, "num"},
 		{tokens.IDENT, "int"},
+		{tokens.IDENT, "num"},
 		{tokens.EOF, ""},
 	}
 

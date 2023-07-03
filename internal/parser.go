@@ -34,10 +34,15 @@ func (p *Parser) parseDeclaration() Declaration {
 	switch p.curToken.Type {
 	case tokens.TYPE:
 		return p.parseType()
-	case tokens.VAR:
-		return p.parseVar()
 	case tokens.FUNC:
 		return p.parseFunc()
+	case tokens.IDENT:
+		switch p.peekToken.Type {
+		case tokens.IDENT:
+			return p.parseVar()
+		default:
+			return nil
+		}
 	default:
 		return nil
 	}
@@ -55,20 +60,17 @@ func (p *Parser) parseType() *Type {
 }
 
 func (p *Parser) parseVar() *Var {
-	declaration := &Var{Token: p.curToken}
+	v := &Var{Token: p.curToken}
+
+	v.Type = p.curToken.Literal
 
 	if !p.expectPeek(tokens.IDENT) {
 		return nil
 	}
 
-	declaration.Name = p.curToken.Literal
+	v.Name = p.curToken.Literal
 
-	if !p.expectPeek(tokens.IDENT) {
-		return nil
-	}
-
-	declaration.Type = string(p.curToken.Literal)
-	return declaration
+	return v
 }
 
 func (p *Parser) parseFunc() *Func {
