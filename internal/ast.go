@@ -122,3 +122,12 @@ func (f *Func) String() string {
 
 	return out.String()
 }
+
+type Return struct {
+	Token Token
+	Value string
+}
+
+func (r *Return) declarationNode()     {}
+func (r *Return) TokenLiteral() string { return r.Token.Literal }
+func (r *Return) String() string       { return r.Value }

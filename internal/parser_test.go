@@ -46,7 +46,7 @@ string str`
 	// Test.
 	ast := parser.Parse()
 
-	// Assert.
+	// Asserts.
 	require := require.New(t)
 	require.NotNil(ast)
 
@@ -171,5 +171,35 @@ func TestParseBlock(t *testing.T) {
 	for idx, test := range tests {
 		decl := ast.Declarations[idx]
 		require.Equal(test.expectedDeclarations, decl.(*Block).Declarations, idx)
+	}
+}
+
+func TestParseReturn(t *testing.T) {
+	input := `
+return a
+return 1
+`
+
+	// Setup.
+	lexer := NewLexer(input)
+	parser := NewParser(lexer)
+
+	// Test.
+	ast := parser.Parse()
+
+	// Asserts.
+	require := require.New(t)
+	require.NotNil(ast)
+
+	tests := []struct {
+		expectedReturnValue string
+	}{
+		{"a"},
+		{"1"},
+	}
+
+	for idx, test := range tests {
+		decl := ast.Declarations[idx]
+		require.Equal(test.expectedReturnValue, decl.(*Return).Value, idx)
 	}
 }

@@ -25,8 +25,9 @@ var tokens = struct {
 	RBRACE TokenType
 
 	// Keywords.
-	TYPE TokenType
-	FUNC TokenType
+	TYPE   TokenType
+	FUNC   TokenType
+	RETURN TokenType
 }{
 	"ILLEGAL",
 	"EOF",
@@ -38,11 +39,13 @@ var tokens = struct {
 	"}",
 	"TYPE",
 	"FUNC",
+	"RETURN",
 }
 
 var TokenKeywords = map[string]TokenType{
-	"type": tokens.TYPE,
-	"func": tokens.FUNC,
+	"type":   tokens.TYPE,
+	"func":   tokens.FUNC,
+	"return": tokens.RETURN,
 }
 
 func LookupKeyword(ident string) TokenType {

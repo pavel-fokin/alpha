@@ -38,6 +38,8 @@ func (p *Parser) parseDeclaration() Declaration {
 		return p.parseFunc()
 	case tokens.LBRACE:
 		return p.parseBlock()
+	case tokens.RETURN:
+		return p.parseReturn()
 	case tokens.IDENT:
 		switch p.peekToken.Type {
 		case tokens.IDENT:
@@ -143,6 +145,19 @@ func (p *Parser) parseFuncReturns() []string {
 	}
 
 	return returns
+}
+
+func (p *Parser) parseReturn() *Return {
+	r := &Return{Token: p.curToken}
+
+	p.nextToken()
+	// if !p.expectPeek(tokens.IDENT) {
+	// 	return nil
+	// }
+
+	r.Value = p.curToken.Literal
+
+	return r
 }
 
 func (p *Parser) nextToken() {
