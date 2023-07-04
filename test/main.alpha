@@ -1,0 +1,9 @@
+type int
+int num
+
+{
+    type string
+    string str
+}
+
+func foo(int a, int b) int

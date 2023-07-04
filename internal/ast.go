@@ -32,6 +32,7 @@ func (a *AST) String() string {
 
 	for _, s := range a.Declarations {
 		out.WriteString(s.String())
+		out.WriteString("\n")
 	}
 
 	return out.String()
@@ -47,9 +48,12 @@ func (b *Block) TokenLiteral() string { return b.Token.Literal }
 func (b *Block) String() string {
 	var out bytes.Buffer
 
+	out.WriteString("{\n")
 	for _, s := range b.Declarations {
-		out.WriteString(s.String())
+		out.WriteString("\t" + s.String())
+		out.WriteString("\n")
 	}
+	out.WriteString("}\n")
 
 	return out.String()
 }

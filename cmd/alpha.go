@@ -13,5 +13,10 @@ func main() {
 		panic(err)
 	}
 
+	if len(os.Args) > 1 {
+		cli.Run(os.Args[1])
+		return
+	}
+
 	cli.NewREPL(user.Username).Start(os.Stdin, os.Stdout)
 }
