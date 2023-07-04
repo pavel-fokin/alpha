@@ -1,11 +1,10 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"os/user"
 
-	"github.com/pavel-fokin/alpha/internal"
+	"github.com/pavel-fokin/alpha/internal/cli"
 )
 
 func main() {
@@ -13,6 +12,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("Hello %s! This is the Alpha(α) programming language!\n", user.Username)
-	internal.REPL{}.Start(os.Stdin, os.Stdout)
+
+	cli.NewREPL(user.Username).Start(os.Stdin, os.Stdout)
 }

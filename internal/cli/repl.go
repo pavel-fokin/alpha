@@ -1,16 +1,28 @@
-package internal
+package cli
 
 import (
 	"bufio"
 	"fmt"
 	"io"
+
+	"github.com/pavel-fokin/alpha/internal"
 )
 
 const PROMT = ">> "
 
-type REPL struct{}
+type REPL struct {
+	username string
+}
+
+func NewREPL(username string) *REPL {
+	return &REPL{
+		username: username,
+	}
+}
 
 func (r REPL) Start(in io.Reader, out io.Writer) {
+	fmt.Printf("Hello %s! This is the Alpha(α) programming language!\n", r.username)
+
 	scanner := bufio.NewScanner(in)
 
 	for {
@@ -21,8 +33,8 @@ func (r REPL) Start(in io.Reader, out io.Writer) {
 		}
 
 		line := scanner.Text()
-		lexer := NewLexer(line)
-		parser := NewParser(lexer)
+		lexer := internal.NewLexer(line)
+		parser := internal.NewParser(lexer)
 		ast := parser.Parse()
 
 		io.WriteString(out, ast.String())
