@@ -21,17 +21,15 @@ type string`
 
 	tests := []struct {
 		expectedLiteral string
-		expectedType    Declaration
 		expectedName    string
 	}{
-		{"type", &Type{}, "int"},
-		{"type", &Type{}, "string"},
+		{"type", "int"},
+		{"type", "string"},
 	}
 
 	for idx, test := range tests {
 		decl := ast.Declarations[idx]
 		require.Equal(test.expectedLiteral, decl.TokenLiteral())
-		require.IsType(test.expectedType, decl)
 		require.Equal(test.expectedName, decl.(*Type).Name)
 	}
 }
@@ -127,5 +125,51 @@ func foo(int a, int b) int
 		require.Equal(test.expectedName, decl.(*Func).Name, idx)
 		require.Equal(test.expectedArgs, decl.(*Func).Args, idx)
 		require.Equal(test.expectedReturns, decl.(*Func).Returns, idx)
+	}
+}
+
+func TestParseBlock(t *testing.T) {
+	input := `
+{}
+{
+	type int
+	int a
+}
+`
+
+	lexer := NewLexer(input)
+	parser := NewParser(lexer)
+
+	ast := parser.Parse()
+
+	require := require.New(t)
+	require.NotNil(ast)
+	require.Len(ast.Declarations, 2)
+
+	tests := []struct {
+		expectedDeclarations []Declaration
+	}{
+		{},
+		{
+			expectedDeclarations: []Declaration{&Type{
+				Token: Token{
+					Type:    tokens.TYPE,
+					Literal: "type",
+				},
+				Name: "int",
+			}, &Var{
+				Token: Token{
+					Type:    tokens.IDENT,
+					Literal: "int",
+				},
+				Type: "int",
+				Name: "a",
+			}},
+		},
+	}
+
+	for idx, test := range tests {
+		decl := ast.Declarations[idx]
+		require.Equal(test.expectedDeclarations, decl.(*Block).Declarations, idx)
 	}
 }

@@ -36,6 +36,8 @@ func (p *Parser) parseDeclaration() Declaration {
 		return p.parseType()
 	case tokens.FUNC:
 		return p.parseFunc()
+	case tokens.LBRACE:
+		return p.parseBlock()
 	case tokens.IDENT:
 		switch p.peekToken.Type {
 		case tokens.IDENT:
@@ -71,6 +73,21 @@ func (p *Parser) parseVar() *Var {
 	v.Name = p.curToken.Literal
 
 	return v
+}
+
+func (p *Parser) parseBlock() *Block {
+	b := &Block{Token: p.curToken}
+
+	p.nextToken()
+
+	for !p.curTokenIs(tokens.RBRACE) && !p.curTokenIs(tokens.EOF) {
+		stmt := p.parseDeclaration()
+		if stmt != nil {
+			b.Declarations = append(b.Declarations, stmt)
+		}
+		p.nextToken()
+	}
+	return b
 }
 
 func (p *Parser) parseFunc() *Func {
@@ -131,6 +148,10 @@ func (p *Parser) parseFuncReturns() []string {
 func (p *Parser) nextToken() {
 	p.curToken = p.peekToken
 	p.peekToken = p.lexer.NextToken()
+}
+
+func (p *Parser) curTokenIs(t TokenType) bool {
+	return p.curToken.Type == t
 }
 
 func (p *Parser) peekTokenIs(tokenType TokenType) bool {

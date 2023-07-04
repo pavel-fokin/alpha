@@ -21,6 +21,8 @@ var tokens = struct {
 	COMMA  TokenType
 	LPAREN TokenType
 	RPAREN TokenType
+	LBRACE TokenType
+	RBRACE TokenType
 
 	// Keywords.
 	TYPE TokenType
@@ -32,6 +34,8 @@ var tokens = struct {
 	",",
 	"(",
 	")",
+	"{",
+	"}",
 	"TYPE",
 	"FUNC",
 }

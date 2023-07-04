@@ -28,6 +28,12 @@ func (l *Lexer) NextToken() Token {
 	case ')':
 		token.Literal = ")"
 		token.Type = tokens.RPAREN
+	case '{':
+		token.Literal = "{"
+		token.Type = tokens.LBRACE
+	case '}':
+		token.Literal = "}"
+		token.Type = tokens.RBRACE
 	case 0:
 		token.Literal = ""
 		token.Type = tokens.EOF

@@ -37,6 +37,23 @@ func (a *AST) String() string {
 	return out.String()
 }
 
+type Block struct {
+	Token        Token
+	Declarations []Declaration
+}
+
+func (b *Block) declarationNode()     {}
+func (b *Block) TokenLiteral() string { return b.Token.Literal }
+func (b *Block) String() string {
+	var out bytes.Buffer
+
+	for _, s := range b.Declarations {
+		out.WriteString(s.String())
+	}
+
+	return out.String()
+}
+
 type Type struct {
 	Token Token
 	Name  string
@@ -55,8 +72,8 @@ func (td *Type) String() string {
 
 type Var struct {
 	Token Token
-	Name  string
 	Type  string
+	Name  string
 }
 
 func (vd *Var) declarationNode()     {}
@@ -74,7 +91,7 @@ func (vd *Var) String() string {
 type Func struct {
 	Token   Token
 	Name    string
-	Args  []*Var
+	Args    []*Var
 	Returns []string // List of returned types.
 }
 
@@ -83,11 +100,11 @@ func (f *Func) TokenLiteral() string { return f.Token.Literal }
 func (f *Func) String() string {
 	var out bytes.Buffer
 
-  args := []string{}
+	args := []string{}
 
-  for _, arg := range f.Args {
-    args = append(args, arg.String())
-  } 
+	for _, arg := range f.Args {
+		args = append(args, arg.String())
+	}
 
 	out.WriteString(f.TokenLiteral() + " ")
 	out.WriteString(f.Name + "(")
