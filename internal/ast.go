@@ -134,4 +134,11 @@ type Return struct {
 
 func (r *Return) declarationNode()     {}
 func (r *Return) TokenLiteral() string { return r.Token.Literal }
-func (r *Return) String() string       { return r.Value }
+func (r *Return) String() string {
+	var out bytes.Buffer
+
+	out.WriteString(r.Token.Literal + " ")
+	out.WriteString(r.Value)
+
+	return out.String()
+}

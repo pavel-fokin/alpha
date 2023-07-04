@@ -14,7 +14,10 @@ func main() {
 	}
 
 	if len(os.Args) > 1 {
-		cli.Run(os.Args[1])
+		err := cli.Run(os.Args[1])
+		if err != nil {
+			panic(err)
+		}
 		return
 	}
 
