@@ -1,6 +1,6 @@
 # Alpha(α) 
 
-This is walkthrough "Writing Interpreter in Go".
+This is an experiment based on walking through "Writing Interpreter in Go".
 
 ```go
 type int
@@ -9,5 +9,5 @@ type string
 int num
 string str
 
-func foo(a, b) int
+func foo(int a, int b) int
 ```

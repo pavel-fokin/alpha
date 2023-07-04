@@ -86,35 +86,35 @@ func (p *Parser) parseFunc() *Func {
 		return nil
 	}
 
-	f.Params = p.parseFuncParams()
+	f.Args = p.parseFuncParams()
 	f.Returns = p.parseFuncReturns()
 
 	return f
 }
 
-func (p *Parser) parseFuncParams() []string {
-	params := []string{}
+func (p *Parser) parseFuncParams() []*Var {
+	args := []*Var{}
 
 	if p.peekTokenIs(tokens.RPAREN) {
 		p.nextToken()
-		return params
+		return args
 	}
 
 	p.nextToken()
 
-	params = append(params, p.curToken.Literal)
+	args = append(args, p.parseVar())
 
 	for p.peekTokenIs(tokens.COMMA) {
 		p.nextToken()
 		p.nextToken()
-		params = append(params, p.curToken.Literal)
+		args = append(args, p.parseVar())
 	}
 
 	if !p.expectPeek(tokens.RPAREN) {
 		return nil
 	}
 
-	return params
+	return args
 }
 
 func (p *Parser) parseFuncReturns() []string {

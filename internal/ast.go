@@ -74,7 +74,7 @@ func (vd *Var) String() string {
 type Func struct {
 	Token   Token
 	Name    string
-	Params  []string
+	Args  []*Var
 	Returns []string // List of returned types.
 }
 
@@ -83,9 +83,15 @@ func (f *Func) TokenLiteral() string { return f.Token.Literal }
 func (f *Func) String() string {
 	var out bytes.Buffer
 
+  args := []string{}
+
+  for _, arg := range f.Args {
+    args = append(args, arg.String())
+  } 
+
 	out.WriteString(f.TokenLiteral() + " ")
 	out.WriteString(f.Name + "(")
-	out.WriteString(strings.Join(f.Params, ", "))
+	out.WriteString(strings.Join(args, ", "))
 	out.WriteString(") ")
 
 	if len(f.Returns) == 0 {
