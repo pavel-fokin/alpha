@@ -81,9 +81,8 @@ func (vd *Var) TokenLiteral() string { return vd.Token.Literal }
 func (vd *Var) String() string {
 	var out bytes.Buffer
 
-	out.WriteString(vd.TokenLiteral() + " ")
-	out.WriteString(vd.Name + " ")
-	out.WriteString(vd.Type)
+	out.WriteString(vd.Type + " ")
+	out.WriteString(vd.Name)
 
 	return out.String()
 }
